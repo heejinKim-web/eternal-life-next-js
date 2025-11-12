@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: #fff;
+  color: #111827;
+}
+main {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/*nav*/
+.nav-container {
+  width: 100%;
+  background: #f3f4f6;
+  padding: 12px 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.nav-list {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+a {
+  color: #111827;
+  text-decoration: none;
+}
+
+/*questions*/
+.form-wrap {
+  display: block;
+  gap: 12px;
+}
+.q-block {
+  margin-bottom: 18px;
+}
+.q-title {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+textarea {
+  width: 100%;
+  min-height: 84px;
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/*schedule*/
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  flex: 1;
+}
+input:first-child {
+  flex: 0 0 96px;
+  text-align: center;
+}
+
+/*pdf exporter*/
+.export-btn {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.export-btn:hover {
+  opacity: 0.95;
+}
