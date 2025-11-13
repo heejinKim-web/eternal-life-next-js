@@ -1,8 +1,9 @@
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
-// Initialize OpenAI client using the standard environment variable.
-// Make sure you set OPENAI_API_KEY in your environment (e.g. .env.local).
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Initialize Google Generative AI client. Set GOOGLE_API_KEY in your .env.local
+const client = new GoogleGenAI({
+  apiKey: process.env.GOOGLE_API_KEY,
+});
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
@@ -25,13 +26,32 @@ ${text}
 [ESSAY] (여기에 에세이)
 `;
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 800,
+    // The @google/genai client expects contents formatted with a text part.
+    // Use a simple text part so the request satisfies the required 'data' field.
+    const completion = await client.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          parts: [
+            {
+              // provide the text as a 'text' data part
+              type: "text",
+              text: prompt,
+            },
+          ],
+        },
+      ],
     });
 
-    const out = completion.choices?.[0]?.message?.content || "";
+    // Log raw response for debugging (check server console)
+    console.log("Gemini raw response:", JSON.stringify(completion, null, 2));
+
+    // Try to extract the main generated text from known fields
+    const out =
+      completion.output?.[0]?.content?.[0]?.text ||
+      completion.result?.output_text ||
+      completion.choices?.[0]?.message?.content ||
+      "";
     // 단순 파싱: 태그로 분리
     const valuesMatch = out.match(/\[VALUES\]\s*([^\n\r]+)/i);
     const identityMatch = out.match(/\[IDENTITY\]\s*([^\n\r]+)/i);
