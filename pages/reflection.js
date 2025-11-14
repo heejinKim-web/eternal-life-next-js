@@ -24,11 +24,37 @@ export default function Reflection() {
 
     if (!res.ok) {
       setLoading(false);
-      alert("요약 생성 중 오류가 발생했습니다.");
+      try {
+        const errData = await res.json();
+        console.error("Server error response:", errData);
+        alert(
+          `요약 생성 중 오류가 발생했습니다: ${errData.error || res.statusText}`
+        );
+      } catch (e) {
+        console.error("Failed to parse error response:", e);
+        alert(`요약 생성 중 오류가 발생했습니다. (상태: ${res.status})`);
+      }
       return;
     }
 
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+      console.log("Server response data:", data);
+    } catch (parseErr) {
+      setLoading(false);
+      console.error("Failed to parse response JSON:", parseErr);
+      alert("응답 형식이 올바르지 않습니다. (JSON 파싱 실패)");
+      return;
+    }
+
+    if (!data.values && !data.identity && !data.summary) {
+      setLoading(false);
+      console.warn("Response data missing expected fields:", data);
+      alert("응답에 예상한 데이터가 없습니다.");
+      return;
+    }
+
     // 서버는 values, identity, summary 반환
     setValues(data.values || []);
     setIdentity(data.identity || "");

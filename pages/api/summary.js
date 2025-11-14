@@ -29,7 +29,7 @@ ${text}
     // The @google/genai client expects contents formatted with a text part.
     // Use a simple text part so the request satisfies the required 'data' field.
     const completion = await client.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash-lite",
       contents: [
         {
           parts: [
@@ -46,12 +46,24 @@ ${text}
     // Log raw response for debugging (check server console)
     console.log("Gemini raw response:", JSON.stringify(completion, null, 2));
 
-    // Try to extract the main generated text from known fields
+    // Try to extract the main generated text from Gemini API response
+    // Gemini 2.5 typically returns: { candidates: [{ content: { parts: [{ text: "..." }] } }] }
     const out =
+      completion.candidates?.[0]?.content?.parts?.[0]?.text ||
       completion.output?.[0]?.content?.[0]?.text ||
       completion.result?.output_text ||
       completion.choices?.[0]?.message?.content ||
       "";
+
+    if (!out) {
+      console.error(
+        "No text extracted from Gemini response. Full response:",
+        completion
+      );
+      return res
+        .status(500)
+        .json({ error: "Failed to extract text from AI response" });
+    }
     // 단순 파싱: 태그로 분리
     const valuesMatch = out.match(/\[VALUES\]\s*([^\n\r]+)/i);
     const identityMatch = out.match(/\[IDENTITY\]\s*([^\n\r]+)/i);
