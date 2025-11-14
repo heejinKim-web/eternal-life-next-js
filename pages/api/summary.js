@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 // Initialize Google Generative AI client. Set GOOGLE_API_KEY in your .env.local
 const client = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_API_KEY,
+  apiKey: "AIzaSyDVw4zM-R0M8NA1Z5dcyU-s18_1mEaZKNI",
 });
 
 export default async function handler(req, res) {
