@@ -4,7 +4,7 @@ import QuestionForm from "@/components/QuestionForm";
 import PdfExporter from "@/components/PdfExporter";
 
 const QUESTIONS = [
-  "무엇을 할까가 아닌 어떻게 살까로 전환",
+  "시간이 무한할 때, ‘무엇을 이루느냐’보다 ‘어떻게 존재하느냐’가 중요해집니다. 나에게 ‘잘 사는 방식’이란 무엇인가요?",
   "삶의 목적이 어떻게 변하게 될까요?",
   "무슨 일을 할때 가장 기쁘고 행복한가요?",
   "배우거나 하고 싶은 것이 있었는데 영원히 미루어놓은 것이 있나요?",
@@ -18,8 +18,8 @@ export default function QuestionsPage() {
   const [answers, setAnswers] = useState({});
 
   useEffect(() => {
-    const saved = localStorage.getItem("answers");
-    if (saved) setAnswers(JSON.parse(saved));
+    // 페이지 로드 시 localStorage 초기화
+    localStorage.removeItem("answers");
   }, []);
 
   useEffect(() => {

@@ -12,8 +12,8 @@ export default function SchedulePage() {
   );
 
   useEffect(() => {
-    const saved = localStorage.getItem("schedule");
-    if (saved) setSchedule(JSON.parse(saved));
+    // 페이지 로드 시 localStorage 초기화
+    localStorage.removeItem("schedule");
   }, []);
 
   useEffect(() => {

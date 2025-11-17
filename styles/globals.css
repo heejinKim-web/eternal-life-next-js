@@ -96,7 +96,7 @@ input {
   flex: 1;
 }
 input:first-child {
-  flex: 0 0 96px;
+  max-width: 96px;
   text-align: center;
 }
 
