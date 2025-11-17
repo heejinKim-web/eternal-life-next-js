@@ -2,6 +2,12 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 
 export default function Home() {
+  useEffect(() => {
+    // 페이지 로드 시 localStorage 초기화
+    localStorage.removeItem("answers");
+    localStorage.removeItem("schedule");
+  }, []);
+
   return (
     <div>
       <Navbar />
