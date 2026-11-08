@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
+import PdfExporter from "@/components/PdfExporter";
 
 export default function Reflection() {
   const [values, setValues] = useState([]);
@@ -10,6 +11,14 @@ export default function Reflection() {
   useEffect(() => {
     // 초기 상태: 없음
   }, []);
+
+  const pdfContent = [
+    values.length > 0 && `[영생 가치 지도]\n${values.join(", ")}`,
+    identity && `[정체성 선언문]\n${identity}`,
+    essay && `[회고 에세이]\n${essay}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   const handleGenerate = async () => {
     const saved = localStorage.getItem("answers");
@@ -28,7 +37,7 @@ export default function Reflection() {
         const errData = await res.json();
         console.error("Server error response:", errData);
         alert(
-          `요약 생성 중 오류가 발생했습니다: ${errData.error || res.statusText}`
+          `요약 생성 중 오류가 발생했습니다: ${errData.error || res.statusText}`,
         );
       } catch (e) {
         console.error("Failed to parse error response:", e);
@@ -125,6 +134,14 @@ export default function Reflection() {
             <h3>📜 회고 에세이</h3>
             <p style={{ whiteSpace: "pre-wrap", marginTop: 8 }}>{essay}</p>
           </section>
+        )}
+
+        {pdfContent && (
+          <PdfExporter
+            type="aiReflection"
+            content={pdfContent}
+            fileName="ai-reflection.pdf"
+          />
         )}
       </main>
     </div>

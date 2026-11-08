@@ -48,7 +48,7 @@ export default function QuestionsPage() {
         </div>
 
         <div style={{ marginTop: 18 }}>
-          <PdfExporter type="reflection" />
+          <PdfExporter type="reflection" questions={QUESTIONS} />
         </div>
       </main>
     </div>

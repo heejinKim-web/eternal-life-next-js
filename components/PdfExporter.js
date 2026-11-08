@@ -1,21 +1,31 @@
 import React from "react";
 
-export default function PdfExporter({ type = "reflection" }) {
+export default function PdfExporter({
+  type = "reflection",
+  questions = [],
+  content: contentProp,
+  fileName,
+}) {
   const handleExport = async () => {
     // assemble content from localStorage depending on type
-    let content = "";
+    let content = contentProp ?? "";
     try {
-      if (type === "reflection") {
+      if (contentProp === undefined && type === "reflection") {
         const raw = localStorage.getItem("answers");
         if (raw) {
           const answers = JSON.parse(raw);
-          // format as numbered list
           const lines = Object.keys(answers)
             .sort((a, b) => Number(a) - Number(b))
-            .map((k) => `${Number(k) + 1}. ${answers[k]}`);
+            .map((k) => {
+              const n = Number(k);
+              const question = questions[n];
+              return question
+                ? `Q${n + 1}. ${question}\nA. ${answers[k]}`
+                : `${n + 1}. ${answers[k]}`;
+            });
           content = lines.join("\n\n");
         }
-      } else if (type === "schedule") {
+      } else if (contentProp === undefined && type === "schedule") {
         const raw = localStorage.getItem("schedule");
         if (raw) {
           const schedule = JSON.parse(raw);
@@ -42,7 +52,8 @@ export default function PdfExporter({ type = "reflection" }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = type === "schedule" ? "schedule.pdf" : "reflection.pdf";
+    a.download =
+      fileName ?? (type === "schedule" ? "schedule.pdf" : "reflection.pdf");
     a.click();
     URL.revokeObjectURL(url);
   };
